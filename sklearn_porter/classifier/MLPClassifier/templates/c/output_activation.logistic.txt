@@ -1,0 +1,9 @@
+// Type: logistic
+double *output_activation(double v[], int size) {
+    double *result = malloc(sizeof(double) * size);
+    int i;
+    for (i = 0; i < {n}; i++) {
+        result[i] = 1. / (1. + exp(-v[i]));
+    }
+    return result;
+}

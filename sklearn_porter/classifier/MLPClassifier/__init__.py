@@ -17,6 +17,15 @@ class MLPClassifier(Classifier):
 
     # @formatter:off
     TEMPLATES = {
+        'c': {
+            'type':     ('{0}'),
+            'arr':      ('{{{0}}}'),
+            'new_arr':  ('new double[{0}]'),
+            'arr[]':    ('double {name}[] = {{{values}}};'),
+            'arr[][]':  ('double {name}[{n}][] = {{{values}}};'),
+            'arr[][][]': ('double {name}[{n}][{m}][] = {{{values}}};'),
+            'indent':   ('    '),
+        },
         'java': {
             'type':     ('{0}'),
             'arr':      ('{{{0}}}'),
@@ -127,12 +136,15 @@ class MLPClassifier(Classifier):
 
         # Activations:
         activations = list(self._get_activations())
+        n_activations = len(activations) + 1
         activations = ', '.join(['atts'] + activations)
         activations = self.temp('arr[][]').format(
-            name='activations', values=activations)
+            name='activations', values=activations, n=n_activations)
 
         # Coefficients (weights):
         coefficients = []
+        n_coefficients = len(self.coefficients)
+        m_weights = len(self.coefficients[0])
         for layer in self.coefficients:
             layer_weights = []
             for weights in layer:
@@ -142,13 +154,14 @@ class MLPClassifier(Classifier):
             coefficients.append(self.temp('arr').format(layer_weights))
         coefficients = ', '.join(coefficients)
         coefficients = self.temp('arr[][][]').format(
-            name='coefficients', values=coefficients)
+            name='coefficients', values=coefficients, n=n_coefficients, m=m_weights)
 
         # Intercepts (biases):
         intercepts = list(self._get_intercepts())
+        n_intercepts = len(intercepts)
         intercepts = ', '.join(intercepts)
         intercepts = self.temp('arr[][]').format(
-            name='intercepts', values=intercepts)
+            name='intercepts', values=intercepts, n=n_intercepts)
 
         return self.temp('method', skipping=True, indentation=1).format(
             class_name=self.class_name, method_name=self.method_name,

@@ -1,0 +1,19 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+
+{hidden_activation_function}
+
+{output_activation_function}
+
+{method}
+
+int main(int argc, const char * argv[]) {{
+    float atts[argc-1];
+    int i;
+    for (i = 1; i < argc; i++) {{
+        atts[i-1] = atof(argv[i]);
+    }}
+    printf("%d", {method_name}(atts));
+    return 0;
+}}

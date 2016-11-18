@@ -1,0 +1,9 @@
+// Type: relu
+double *hidden_activation(double v[], int size) {
+    double *result = malloc(sizeof(double) * size);
+    int i;
+    for (i = 0; i < size; i++) {
+        result[i] = fmax(0, v[i]);
+    }
+    return result;
+}
